@@ -3,7 +3,7 @@ _PicLocker_ is a Blazor Server application that allows users to upload and store
 
 &nbsp;
 ## 💡Idea
-This web application was created as a project for finishing my bachelor's degree. My assignment was to get to know _Blazor_ platform, which is used for creating web application. That's the reason this web application was created. It provides features, which are listed below and it also should also improve user's communicaton and collaboration. 
+This web application was created as a project for finishing my bachelor's degree. My assignment was to get to know _Blazor_ platform, which is used for creating web applications. That's the reason this web application was created. It provides features, which are listed below and it should also improve user's communicaton and collaboration. 
 
 &nbsp;
 
