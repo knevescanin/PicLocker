@@ -1,0 +1,44 @@
+@using Microsoft.AspNetCore.Identity
+@using BlazorApp.Areas.Identity.Data
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+
+<ul class="navbar-nav" style="color: white;">
+@if (SignInManager.IsSignedIn(User))
+{
+    if(User.IsInRole("admin"))
+    {
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle"href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true" style="color: white; font-weight:bold;">Admin</a>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Index">Profile</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout">Logout</a></li>
+        </ul>
+    </li>
+    }
+
+    else if(User.IsInRole("user"))
+    {
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle"href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true" style="color: white; font-weight:bold;">User</a>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Index">Profile</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout">Logout</a></li>
+        </ul>
+    </li>
+    }
+    
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link" id="register" asp-area="Identity" asp-page="/Account/Register" style="color: white; font-weight:bold;">Register</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="login" asp-area="Identity" asp-page="/Account/Login" style="color: white; font-weight:bold;">Login</a>
+    </li>
+}
+</ul>

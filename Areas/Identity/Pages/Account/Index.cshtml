@@ -1,0 +1,67 @@
+﻿@page "userprofilemodel"
+@model IndexModel
+
+
+
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <h2 class="text-center mb-5" style="color: black; font-size: 50px;">User profile</h2>
+    <hr class="mb-3 mt-3" style="color: blue; height: 1.5px;">
+    <div class="col-md-8 mt-4 mx-auto" style="color:darkblue;">
+
+        <form id="profile-form" method="post">
+
+
+            <div class="form-floating m-2" style="text-decoration: none;">
+                 <a href="/User" >Show User Details</a><br>
+            </div>
+
+            <div class="form-floating m-2">
+                <input asp-for="Username" class="form-control" disabled />
+                <label asp-for="Username" class="form-label"></label>
+            </div>
+
+            <div class="form-floating m-2">
+                <input asp-for="Input.FirstName" class="form-control" />
+                <label asp-for="Input.FirstName" class="form-label"></label>
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating m-2">
+                <input asp-for="Input.LastName" class="form-control" />
+                <label asp-for="Input.LastName" class="form-label"></label>
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+
+            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary mt-3">Save</button>
+        </form>
+    </div>
+</div>
+
+
+
+<style>
+
+    .row{
+        display:flex;
+        justify-content: center;
+    }
+
+    .col-md-8{
+        display: flex;
+        justify-content: center;
+    }
+
+    .form-floating
+    {
+        display: flex;
+        justify-content: center;
+    }
+
+    .form-control
+    {
+        width: 400px;
+    }
+
+    
+</style>

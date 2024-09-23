@@ -1,0 +1,39 @@
+﻿@using BlazorApp.Areas.Identity.Data;
+@using Microsoft.AspNetCore.Identity;
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.SignalR.Client
+
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<AuthorizeView>
+    <Authorized>
+        <a href="Identity/Account/userprofilemodel" style="text-decoration: none; color: white;">Hello, <span style="font-weight: bold;">@UserName </span></a>
+        <form method="post" action="Identity/Account/Logout">
+            <button type="submit" class="nav-link btn btn-link" style="text-decoration: none; color: white; font-weight:bold;">Log out</button>
+        </form>
+    </Authorized>
+    <NotAuthorized>
+        <a href="Identity/Account/Register" style="text-decoration: none; color: white; font-weight:bold;">Register</a>
+        <a href="Identity/Account/Login" style="text-decoration: none; color: white; font-weight:bold;">Log in</a>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+   private string UserName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            var currentUser = await UserManager.GetUserAsync(user);
+            UserName = currentUser?.UserName;
+        }
+    }
+}

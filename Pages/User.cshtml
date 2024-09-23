@@ -1,0 +1,41 @@
+@page "/user"
+@model BlazorApp.Pages.UserModel
+@{
+    Layout = "_Layout";
+}
+
+    
+
+<div class="row my-5">
+    <h1 class="text-center mb-5">Hello @Model.appUser?.UserName, here are your's profile information!</h1>
+    <div class="col-md-6 mx-auto rounded border p-5" style="color:darkblue;">
+        
+    
+        <h2 class="text-center" style="color:black; font-size: 43px;">User information</h2>
+        
+        <hr class="mb-5 mt-3" style="color: blue; height: 1.5px;">
+
+        <div class="mb-3">
+            <span style="color: darkblue; font-size: 19px;">First Name:</span>
+            <span style="color: rgb(54,69,79);; font-size: 19px;">@Model.appUser?.FirstName</span>
+        </div>
+
+        <div class="mb-3">
+            <span style="color: darkblue; font-size: 19px;">Last Name: </span>
+            <span style="color: rgb(54,69,79);; font-size: 19px;">@Model.appUser?.LastName</span>
+        </div>
+
+        <div class="mb-3">
+            <span style="color: darkblue; font-size: 19px;">Username:</span>
+            <span style="color: rgb(54,69,79);; font-size: 19px;">@Model.appUser?.UserName</span>
+        </div>
+
+        <div>
+            <span style="color: darkblue; font-size: 19px;">Email: </span>
+            <span style="color: rgb(54,69,79); font-size: 19px;">@Model.appUser?.Email</span>
+        </div>
+
+
+    </div>
+</div>
+ 

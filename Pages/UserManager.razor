@@ -1,0 +1,281 @@
+@page "/usermanager"
+@attribute [Authorize(Roles = "admin")]
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using BlazorApp.Areas.Identity.Data
+@using Microsoft.AspNetCore.SignalR.Client
+@using Microsoft.EntityFrameworkCore
+
+@inject UserManager<ApplicationUser> _UserManager
+@inject RoleManager<IdentityRole> _RoleManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager Navigation
+@inject BlazorAppIdentityDbContext _context
+
+
+
+
+<AuthorizeView>
+    <Authorized>
+
+        <h1> Hello, @context.User.Identity?.Name! </h1>
+
+        @if (@context.User.IsInRole("admin"))
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th> ID </th>
+                        <th> First Name </th>
+                        <th> Last Name </th>
+                        <th> User Name </th>
+                        <th> Email</th>
+                        <th> Roles</th>
+                        <th> Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in usersList)
+                    {
+                        <tr>
+                            <td>@user.Id</td>
+                            <td>@user.FirstName</td>
+                            <td>@user.LastName</td>
+                            <td>@user.UserName</td>
+                            <td>@user.Email </td>
+                            <td>
+                                <!-- Displaying roles from userRolesDictionary -->
+                                @if (userRolesDictionary.ContainsKey(user.Id))
+                                    {
+                                        @string.Join(", ", userRolesDictionary[user.Id])
+                                    }
+                            </td>
+                            <td>
+                                <button class="btn btn-primary" @onclick="(() => editUser(user))">
+                                    Edit
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @if (Popup)
+            {
+                <div class="modal" tabindex="-1" style="display: block;" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content mt-5">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Edit User @user.UserName</h3>
+                                <button type="button" class="close" @onclick="closePopup" style="border-radius: 40px; border: none; background-color: transparent;">
+                                    <span aria-hidden="true" style="color: red;">X</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input class="form-control mb-2 mt-2" type="text" placeholder="User Name" @bind="user.UserName">
+                                <input class="form-control mb-2 mt-2" type="text" placeholder="Email" @bind="user.Email">
+                                <select class="form-control mt-2" @bind="CurrentUserRole">
+                                    @foreach (var option in roleOptions)
+                                    {
+                                        <option value="@option">@option</option>
+                                    }
+                                </select>
+                                <br>
+                                <button class="btn btn-primary" @onclick="updateUser">Save</button>
+                                <button class="btn btn-danger" @onclick="deleteUser">Delete</button>
+                                <br>
+                                <span style="color: red;">@stringError</span>
+
+                                <!-- Added Section for Deleting Roles -->
+                                <h4 class="mt-4">Manage Roles</h4>
+                                <ul style="list-style-type: none;">
+                                    @foreach (var role in userRoles)
+                                    {
+                                        <li class="m-2">
+                                            @role
+                                            <button class="btn btn-danger btn-sm mb-1 mt-1" @onclick="(() => deleteUserRole(role))">Remove</button>
+                                        </li>
+                                    }
+                                </ul>
+                                <!-- End of Added Section -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p style="color: red; font-size: 20px;">You don't have permission to enter this page!</p>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <p class="m-3" style="color: red; font-size:20px;">You are not logged in. Please log in!</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    ApplicationUser user = new ApplicationUser();
+    string CurrentUserRole { get; set; } = "user";
+    List<ApplicationUser> usersList = new List<ApplicationUser>();
+
+    List<string> userRoles = new List<string>();
+    
+    // Introduced dictionary to store user roles
+    Dictionary<string, List<string>> userRolesDictionary = new Dictionary<string, List<string>>();
+
+    List<string> roleOptions = new List<string> { "user", "admin" };
+
+    string stringError = "";
+    bool Popup = false;
+
+    private HubConnection hubConnection;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/userhub"))
+            .Build();
+
+        hubConnection.On<string>("ReceiveUserUpdate", async (userId) =>
+        {
+            StateHasChanged();
+        });
+
+        hubConnection.On<string>("ReceiveUserDelete", async (userId) =>
+        {
+            StateHasChanged();
+        });
+
+        await hubConnection.StartAsync();
+
+        if(usersList.Count != 0)
+        {
+            usersList.Clear();
+        }
+        await getUsers();
+    }
+
+    private async Task updateUser()
+    {
+            var _user = await _UserManager.FindByIdAsync(user.Id);
+
+            if (_user != null)
+            {
+                _user.UserName = user.UserName;
+                _user.Email = user.Email;
+
+                var result = await _UserManager.UpdateAsync(_user);
+                if (!result.Succeeded)
+                {
+                    stringError = string.Join(", ", result.Errors.Select(e => e.Description));
+                    return;
+                }
+
+                var isAdmin = await _UserManager.IsInRoleAsync(_user, "admin");
+                var isUser = await _UserManager.IsInRoleAsync(_user, "user");
+                if (CurrentUserRole == "admin" && !isAdmin)
+                {
+                    await _UserManager.AddToRoleAsync(_user, "admin");
+                }
+                else if (CurrentUserRole == "user" && !isUser)
+                {
+                    await _UserManager.AddToRoleAsync(_user, "user");
+                }
+                Popup = false;
+                await getUsers();
+                await hubConnection.SendAsync("SendUserUpdate", user.Id);
+            }
+    }
+
+    private async Task editUser(ApplicationUser _ApplicationUser)
+    {
+        user = _ApplicationUser;
+
+        var _user = await _UserManager.FindByIdAsync(user.Id);
+        if (_user != null)
+        {
+            var isAdmin = await _UserManager.IsInRoleAsync(_user, "admin");
+            CurrentUserRole = isAdmin ? "admin" : "user";
+            
+            // Fetch and display the roles of the selected user
+            userRoles = (await _UserManager.GetRolesAsync(_user)).ToList();
+        }
+        Popup = true;
+    }
+
+   private async Task deleteUser()
+    {
+        Popup = false;
+        var _user = await _UserManager.FindByIdAsync(user.Id);
+
+        if (_user != null)
+        {
+            // Delete related ImageFiles before deleting the user
+            var userImageFiles = _context.ImageFiles.Where(i => i.UserId == _user.Id);
+            _context.ImageFiles.RemoveRange(userImageFiles);
+            await _context.SaveChangesAsync();
+
+            // Now delete the user
+            var result = await _UserManager.DeleteAsync(_user);
+            // Optionally, notify clients about the user deletion
+
+            if(result.Succeeded)
+            {
+                getUsers();
+                await hubConnection.SendAsync("SendUserDelete", user.Id);
+            }
+
+        }
+    }
+
+    // Added method to delete specific role of the user
+    private async Task deleteUserRole(string role)
+    {
+        var _user = await _UserManager.FindByIdAsync(user.Id);
+
+        if (_user != null && await _UserManager.IsInRoleAsync(_user, role))
+        {
+            var result = await _UserManager.RemoveFromRoleAsync(_user, role);
+            if (result.Succeeded)
+            {
+                userRoles.Remove(role);
+                await getUsers();
+                await hubConnection.SendAsync("SendUserUpdate", user.Id);
+            }
+            else
+            {
+                stringError = string.Join(", ", result.Errors.Select(e => e.Description));
+            }
+        }
+    }
+
+    private void closePopup()
+    {
+        Popup = false;
+    }
+
+    private async Task getUsers()
+    {
+        
+        stringError = "";
+        usersList.Clear();
+        userRolesDictionary.Clear();
+
+        var allUsers = await _UserManager.Users.ToListAsync();
+
+        foreach (var user in allUsers)
+        {
+            var roles = await GetUserRolesAsync(user);
+            userRolesDictionary[user.Id] = roles;
+            usersList.Add(user);
+        }
+    }
+
+    // Method to fetch roles for a specific user
+    private async Task<List<string>> GetUserRolesAsync(ApplicationUser user)
+    {
+        return (await _UserManager.GetRolesAsync(user)).ToList();
+    }
+}

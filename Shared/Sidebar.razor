@@ -1,0 +1,52 @@
+
+<div class="container @(isExpanded ? "expand" : "collapse")" @onmouseenter="Expand" @onmouseleave="Collapse">
+
+
+<a class="navbar-brand" href="/">🖼️ PicLocker</a>
+    <NavLink class="menu-item" href="">
+        <span class="oi oi-home menu-icon">
+            <span class="menu-name">Home</span>
+        </span>
+    </NavLink>
+
+    <AuthorizeView Roles="user">    
+        <hr>
+
+            <NavLink class="menu-item" href="store">
+                <span class="oi oi-data-transfer-upload menu-icon">
+                    <span class="menu-name">Store</span>
+                </span>
+            </NavLink>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="admin">
+        <hr>
+
+            <NavLink class="menu-item" href="usermanager">
+                <span class="oi oi-people menu-icon">
+                    <span class="menu-name">User Manager</span>
+                </span>
+            </NavLink>
+    </AuthorizeView>
+</div>
+
+
+@code {
+    [Parameter]
+    public bool isExpanded { get; set; }
+
+     [Parameter]
+    public EventCallback<bool> IsExpandedChanged { get; set; }
+    private async void Expand()
+    {
+        isExpanded = true;
+        await IsExpandedChanged.InvokeAsync(isExpanded);
+    }
+
+    private async void Collapse()
+    {
+        isExpanded = false;
+        await IsExpandedChanged.InvokeAsync(isExpanded);
+
+    }
+}

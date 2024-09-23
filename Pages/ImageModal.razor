@@ -1,0 +1,79 @@
+@code {
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public EventCallback<bool> IsVisibleChanged { get; set; }
+    [Parameter] public string ImageUrl { get; set; }
+    [Parameter] public EventCallback<int> OnDelete { get; set; }
+    [Parameter] public EventCallback<string> OnDeleteUrl { get; set; }
+    [Parameter] public int ImageId { get; set; }
+    [Parameter] public bool CanDelete { get; set; } 
+
+    private void CloseModal()
+    {
+        IsVisible = false;
+        IsVisibleChanged.InvokeAsync(IsVisible);
+    }
+    private async Task DeleteImage()
+    {
+            await OnDelete.InvokeAsync(ImageId);
+            await OnDeleteUrl.InvokeAsync(ImageUrl);
+    }
+
+}
+
+@if (IsVisible)
+{
+    <div class="modal-overlay" style="display: flex; flex-direction: column; justifiy-content: center;"@onclick="CloseModal">
+        <div class="modal-content">
+            <img src="/Uploads/@ImageUrl" alt="Enlarged image" style="max-width: 100vw; max-height: 90vh;" />
+        </div>
+        @if(CanDelete)
+        {
+            <button class="m-4 delete-button" @onclick="DeleteImage">Delete</button>
+        }
+    </div>
+}
+
+<style>
+    .modal-overlay {
+        position: fixed;
+        top: 15vh;
+        left: 15vw;
+        width: 70vw;
+        height: 70vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 8px;
+        border: 3px solid lightgrey;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0px 0px 5px gray;
+    }
+
+    .delete-button 
+    {
+        background-color: #D2122E;
+        color: white;
+        font-weight: bold; 
+        border-radius:20px; 
+        border: 2px solid #D2122E;
+        transition: 0.5s ease;
+    }
+
+    button:hover
+    {
+        cursor: pointer;
+        transform: scale(1.1);
+    }
+
+    button:active
+    {
+        transform: translateY(4px);
+    }
+
+</style>

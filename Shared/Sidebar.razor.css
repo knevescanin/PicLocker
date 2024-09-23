@@ -1,0 +1,85 @@
+.container 
+{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-image: linear-gradient(180deg,rgb(5, 39, 103), lightblue);
+    border-radius: 0px 0px 10px 10px;
+    padding: 2rem;
+    padding-top: 0rem;
+    position: fixed;
+    transition:  0.2s ease;
+    z-index: 2;
+}
+
+.expand {
+    width: 15rem;
+}
+
+.collapse {
+    width: 5rem;
+}
+
+
+.menu-icon
+{
+    color:white;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    opacity: 1;
+}
+
+.menu-name
+{
+    width: 100vw;
+    color: white;
+    visibility: hidden;
+    position: absolute;
+    margin-left: 0.6rem;
+    opacity: 1;
+    font-size: 1rem;
+}
+
+.navbar-brand
+{
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+    visibility: hidden;
+}
+
+.expand .navbar-brand
+{
+    visibility: visible;
+    color: white;
+    padding-top: 2rem;
+    
+}
+
+.expand .menu-name 
+{
+    visibility: visible;
+}
+
+.expand hr
+{
+    color: white;
+}
+
+
+.menu-item:hover .menu-name
+{
+     color: lightcyan;
+     transform: scale(1.2);
+     transition: transform 0.5s ease;
+     transform-origin: left center;
+}
+
+.menu-item:hover .menu-icon
+{
+     color: lightcyan;
+     transform: scale(1.2);
+     transition: transform 0.5s ease;
+     
+}
+
+
