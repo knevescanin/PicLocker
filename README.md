@@ -25,8 +25,16 @@ This web application was created as a project for finishing my bachelor's degree
 
 &nbsp;
 
-## 🔮 Future Enhancements
+## ▶️ Application Preview
+![PicLocker-ezgif com-resize](https://github.com/user-attachments/assets/97ca9763-b6e3-4c2e-a9e4-2a77c02a3860)
 
+
+
+
+
+&nbsp;
+
+## 🔮 Future Enhancements
 * Video Sharing: Users can also mutually share videos.
 * Additional Image Information: Display other image information like it's location.
 * Notifications: Real-time notifications for when a new image is shared.
