@@ -27,8 +27,7 @@ This web application was created as a project for finishing my bachelor's degree
 &nbsp;
 
 ## ▶️ Application Preview
-![PicLocker](https://github.com/user-attachments/assets/60260172-6d89-4f62-8ee0-b6456cee9c7b)
-
+https://github.com/user-attachments/assets/1c0e897f-8bfa-4241-90ee-53c0987e3624
 
 &nbsp;
 
