@@ -27,11 +27,12 @@ This web application was created as a project for finishing my bachelor's degree
 &nbsp;
 
 ## ▶️ Application Preview
-https://github.com/user-attachments/assets/0490fafa-c147-4e2c-826b-e1ae7e1191b1
+![PicLocker](https://github.com/user-attachments/assets/60260172-6d89-4f62-8ee0-b6456cee9c7b)
+
 
 &nbsp;
 
-## 🔮 Future Enhancements
+## 🔮 Possible Future Enhancements
 * Video Sharing: Users can also mutually share videos.
 * Additional Image Information: Display other image information like it's location.
 * Notifications: Real-time notifications for when a new image is shared.
