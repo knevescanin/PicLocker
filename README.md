@@ -2,6 +2,7 @@
 _PicLocker_ is a Blazor Server application that allows users to upload and store images. It also allows users to select which other users can view their uploaded images, providing fine-grained access control over shared content.
 
 &nbsp;
+
 ## 💡Idea
 This web application was created as a project for finishing my bachelor's degree. My assignment was to get to know _Blazor_ platform, which is used for creating web applications. That's the reason this web application was created. It provides features, which are listed below and it should also improve user's communicaton and collaboration. 
 
@@ -26,11 +27,7 @@ This web application was created as a project for finishing my bachelor's degree
 &nbsp;
 
 ## ▶️ Application Preview
-![PicLocker-ezgif com-resize](https://github.com/user-attachments/assets/97ca9763-b6e3-4c2e-a9e4-2a77c02a3860)
-
-
-
-
+https://github.com/user-attachments/assets/0490fafa-c147-4e2c-826b-e1ae7e1191b1
 
 &nbsp;
 
@@ -46,6 +43,8 @@ This web application was created as a project for finishing my bachelor's degree
 ## 🤝 Contributing
 
 If you'd like to contribute to this project, please feel free to submit a pull request or file an issue on GitHub.
+
+&nbsp;
 
 ## 📜 License
 
