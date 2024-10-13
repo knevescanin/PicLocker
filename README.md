@@ -22,7 +22,8 @@ This web application was created as a project for finishing my bachelor's degree
 * ASP.NET Core Identity: For authentication and user management.
 * Entity Framework Core: For database access and storage.
 * SignalR: For real-time updates on the UI.
-* _SQL_ Database: For image storage.
+* _Microsoft SQL Server_: For image storage.
+* _Docker_: For setting app environment on macOS.
 
 &nbsp;
 
